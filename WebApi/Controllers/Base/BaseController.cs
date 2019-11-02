@@ -8,9 +8,12 @@ using WebApi.Views.Base;
 
 namespace WebApi.Controllers.Base
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public abstract class BaseController<TService,TView,TModel> : ControllerBase where TView:BaseView<TModel> where TModel:class,IBaseModel
     {
-        public BaseController()
+        protected TService Service;
+        public BaseController(TService service)
         {
 
         }

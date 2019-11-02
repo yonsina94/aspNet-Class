@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using WebApi.Database.Models.Base;
 
@@ -9,7 +10,9 @@ namespace WebApi.Database.Repositories.Base
 {
     public interface IBaseRepository<Tmodel> where Tmodel:class,IBaseModel
     {
-        Task<List<Tmodel>> GetAll();
+        Task<IEnumerable<Tmodel>> GetAll();
+        Task<IEnumerable<Tmodel>> GetAllWhere(Expression<Func<Tmodel,bool>> @where);
+        Task<Tmodel> GetWhere(Expression<Func<Tmodel,bool>> @where);
         Task<Tmodel> GetByID(object id);
         Task Insert(Tmodel model);
         Task Update(Tmodel model);
@@ -36,14 +39,24 @@ namespace WebApi.Database.Repositories.Base
             }
         }
 
-        public virtual async Task<List<Tmodel>> GetAll()
+        public virtual async Task<IEnumerable<Tmodel>> GetAll()
         {
-            return await Task.Run(()=> Conection.Set<Tmodel>().ToList());
+            return await Task.Run(()=> Conection.Set<Tmodel>());
+        }
+
+        public virtual async Task<IEnumerable<Tmodel>> GetAllWhere(Expression<Func<Tmodel, bool>> where)
+        {
+            return await Task.Run(()=>Conection.Set<Tmodel>().Where(where));
         }
 
         public virtual async Task<Tmodel> GetByID(object id)
         {
             return await Conection.Set<Tmodel>().FindAsync(id);
+        }
+
+        public virtual async Task<Tmodel> GetWhere(Expression<Func<Tmodel, bool>> where)
+        {
+            return await Conection.Set<Tmodel>().FirstAsync();
         }
 
         public virtual async Task Insert(Tmodel model)
