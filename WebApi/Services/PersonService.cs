@@ -1,3 +1,4 @@
+using System.Net.Http;
 using System.Threading.Tasks;
 using WebApi.Database.Models;
 using WebApi.Database.Repositories.Base;
@@ -39,6 +40,8 @@ namespace WebApi.Services{
         public override Task<bool> ValidateOnUpdateAsync(Person model)
         {
             throw new System.NotImplementedException();
+
+            var client = new RestClient("")
         }
     }
 }
